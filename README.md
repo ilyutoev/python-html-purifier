@@ -1,5 +1,5 @@
-Python HTML purifier
-====================
+Python HTML purifier for python 3
+=================================
 
 About
 -----
