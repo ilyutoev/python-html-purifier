@@ -3,9 +3,7 @@
 Based on native Python module HTMLParser purifier of HTML
 """
 
-from HTMLParser import HTMLParser
-
-
+from html.parser import HTMLParser
 
 class HTMLPurifier(HTMLParser):
     """
@@ -42,21 +40,21 @@ class HTMLPurifier(HTMLParser):
         """
         Current representation of purifying data as unicode
         """
-        return u''.join(self.data)
+        return ''.join(self.data)
     
     def handle_starttag(self, tag, attrs):
         """
         Handler of starting tag processing (overrided, private)
         """
         if self.DEBUG:
-            print 'Encountered a start tag:', tag, attrs
+            print ('Encountered a start tag:', tag, attrs)
         if tag in self.sanitizelist:
             self.level += 1
             return
         if self.isNotPurify or tag in self.whitelist_keys:
             attrs = self.__attrs_str(tag, attrs)
             attrs = ' ' + attrs if attrs else ''
-            tmpl = u'<%s%s />' if tag in self.unclosedTags and self.isStrictHtml else u'<%s%s>'
+            tmpl = '<%s%s />' if tag in self.unclosedTags and self.isStrictHtml else u'<%s%s>'
             self.data.append( tmpl % (tag, attrs,) )
         
     def handle_endtag(self, tag):
@@ -64,21 +62,21 @@ class HTMLPurifier(HTMLParser):
         Handler of ending tag processing (overrided, private)
         """
         if self.DEBUG:
-            print 'Encountered an end tag :', tag
+            print ('Encountered an end tag :', tag)
         if tag in self.sanitizelist:
             self.level -= 1
             return
         if tag in self.unclosedTags:
             return
         if self.isNotPurify or tag in self.whitelist_keys:
-            self.data.append(u'</%s>' % tag)
+            self.data.append('</%s>' % tag)
         
     def handle_data(self, data):
         """
         Handler of processing data inside tag (overrided, private)
         """
         if self.DEBUG:
-            print 'Encountered some data  :', data
+            print ('Encountered some data  :', data)
         if not self.level:
             self.data.append(data)
     
@@ -87,7 +85,7 @@ class HTMLPurifier(HTMLParser):
         Handler of processing entity (overrided, private)
         """
         if self.DEBUG:
-            print 'Encountered entity  :', name
+            print ('Encountered entity  :', name)
         if not self.removeEntity:
             self.data.append('&%s;' % name)
         
@@ -128,5 +126,5 @@ class HTMLPurifier(HTMLParser):
             key = attr[0]
             value = attr[1] or ''
             if all_attrs or key in enabled:
-                items.append( u'%s="%s"' % (key, value,) )
-        return u' '.join(items)
+                items.append( '%s="%s"' % (key, value,) )
+        return ' '.join(items)
